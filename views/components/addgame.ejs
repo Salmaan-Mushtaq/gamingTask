@@ -1,0 +1,25 @@
+<% layout ('layouts/boilerplate')%>
+<form action="/addgame" method="POST" class="mb-3">
+  <div class="mb-3">
+    <label for="gameName" class="form-label">Name</label>
+    <input type="text" class="form-control" id="gameName" name="title" placeholder="game name">
+  </div>
+  <div class="mb-3">
+    <label for="creator" class="form-label">Creator</label>
+    <input type="text" class="form-control" id="creator" name="creator" placeholder="creator name">
+  </div>
+  <div class="mb-3">
+    <label class="form-label">Size</label>
+    <input type="text" class="form-control" id="width" name="width" placeholder="width">
+    <input type="text" class="form-control" id="height" name="height" placeholder="height">
+  </div>
+  <div class="mb-3">
+    <label for="fileName" class="form-label">File Name</label>
+    <input type="text" class="form-control" id="fileName" name="fileName" placeholder="file name">
+  </div>
+  <div class="mb-3">
+    <label for="thumbnailFile" class="form-label">Thumb Nail File</label>
+    <input type="text" class="form-control" id="thumbnailFile" name="thumbnailFile" placeholder="thumb nail file">
+  </div>
+  <button type="submit" class="btn btn-primary">Submit</button>
+</form>
