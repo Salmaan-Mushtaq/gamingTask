@@ -4,6 +4,7 @@ const path = require('path');
 const ejsMate = require('ejs-mate');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
+const fileUpload = require('express-fileupload')
 
 mongoose.set('strictQuery', true)
 
@@ -31,22 +32,11 @@ app.engine('ejs', ejsMate);
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 app.use(express.static('public'));
-app.use(bodyParser.urlencoded({ extended: true }));;
-
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(fileUpload());
 app.get('/', (req, res) => {
     res.render('components/home');
 });
-
-app.get('/game/:title/:creator/:width/:height/:fileName/:thumbnailFile', (req, res) => {
-    const title = req.params.title;
-    const creator = req.params.creator;
-    const width = req.params.width;
-    const height = req.params.height;
-    const fileName = req.params.fileName;
-    const thumbnailFile = req.params.thumbnailFile;
-    res.render('components/game', { title, creator, width, height, fileName, thumbnailFile });
-});
-
 
 //Route to see all the gamesList
 app.get('/list', (req, res) => {
@@ -60,20 +50,43 @@ app.get('/list', (req, res) => {
     });
 })
 
-
 app.get('/addgame', (req, res) => {
     res.render('components/addgame');
 });
 
+//route to add a new game 
 app.post('/addgame', (req, res) => {
+
     const data = req.body;
+    //variable for representation of files
+    const gameFile = req.files.gameFile;
+    const imageFile = req.files.imageFile;
+
+    //calling the methods to save the files in the respected folder
+    gameFile.mv('public/games/' + gameFile.name, function (error) {
+        if (error) {
+            console.log("Couldn't upload the game file");
+            console.log(error);
+        } else {
+            console.log("Game file succesfully uploaded");
+        }
+    });
+    imageFile.mv('public/games/thumbnails/' + imageFile.name, function (error) {
+        if (error) {
+            console.log("Couldn't upload the image file");
+            console.log(error);
+        } else {
+            console.log("Image file succesfully uploaded");
+        }
+    });
+
     Game.create({
         title: data.title,
         creator: data.creator,
         width: data.width,
         height: data.height,
-        fileName: data.fileName,
-        thumbnailFile: data.thumbnailFile
+        fileName: gameFile.name,
+        thumbnailFile: imageFile.name
     }, (error, data) => {
         if (error) {
             console.log("Data cannot be added in the database");
@@ -84,6 +97,33 @@ app.post('/addgame', (req, res) => {
     });
     res.redirect('/list');
 })
+
+
+
+app.get('/game/:id', (req, res) => {
+    const id = req.params.id;
+    Game.findById(id, (error, foundGame) => {
+        if (error) {
+            res.send("Error!! Id not found in the database");
+        } else {
+            res.render('components/game', {
+                title: foundGame.title,
+                creator: foundGame.creator,
+                width: foundGame.width,
+                height: foundGame.height,
+                fileName: foundGame.fileName,
+                thumbnailFile: foundGame.thumbnailFile
+            })
+        }
+    })
+});
+
+app.get('/game/:id/edit', (req, res) => {
+    const id = req.params.id;
+    const gameFound = Game.findById(id)
+    res.render('components/editgame', { gameFound })
+})
+
 
 app.listen(3000, () => {
     console.log('Gamming website is listening on port 3000')
