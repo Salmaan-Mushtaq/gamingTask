@@ -120,11 +120,50 @@ app.get('/game/:id', (req, res) => {
 
 app.get('/game/:id/edit', (req, res) => {
     const id = req.params.id;
-    const gameFound = Game.findById(id)
-    res.render('components/editgame', { gameFound })
+    Game.findById(id, (error, foundGame) => {
+        if (error) {
+            res.send("Error!! Id not found in the database");
+        } else {
+            res.render('components/editgame', {
+                title: foundGame.title,
+                creator: foundGame.creator,
+                width: foundGame.width,
+                height: foundGame.height,
+                id: id
+            });
+        }
+    });
+});
+
+app.post('/game/:id/update', (req, res) => {
+    const id = req.params.id;
+    Game.findByIdAndUpdate(id, {
+        title: req.body.title,
+        creator: req.body.creator,
+        width: req.body.width,
+        height: req.body.height
+    }, (error, updateGame) => {
+        if (error) {
+            console.log("Game not updated")
+            console.log(error)
+        } else {
+            res.redirect('/list');
+            console.log(updateGame);
+        }
+    });
+});
+
+app.get('/game/:id/delete', (req, res) => {
+    const id = req.params.id;
+    Game.findByIdAndDelete(id, (err) => {
+        if (err) {
+            console.log("Got an error");
+        } else {
+            console.log("Game deleted succesfully!!");
+            res.redirect('/list')
+        }
+    });
 })
-
-
 app.listen(3000, () => {
     console.log('Gamming website is listening on port 3000')
 });

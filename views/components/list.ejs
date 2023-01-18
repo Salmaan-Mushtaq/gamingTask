@@ -8,7 +8,9 @@
       <div class="card-body">
         <h5 class="card-title"><%=gamesData[i].title %> </h5>
         <p class="card-text">Game developed by <%= gamesData[i].creator %></p>
-        <a href="/game/<%= gamesData[i].id %>" class="btn btn-primary">Play Game</a>
+        <a href="/game/<%= gamesData[i].id %>" class="btn btn-primary ">Play Game</a>
+        <a href="/game/<%= gamesData[i].id %>/edit" class="btn btn-warning ">Edit</a>
+        <a href="/game/<%= gamesData[i].id %>/delete " class="btn btn-danger">Delete</a>
       </div>
     </div>
   </div>
