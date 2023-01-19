@@ -5,10 +5,10 @@
       <div class="card border border-secondary">
         <div class="card-body">
           <h1 class="card-title">Game: <span class="text-success">
-              <%= title %>
+              <%= foundGame.title %>
             </span> </h1>
           <h3 class="card-text"><strong> Created By:</strong> <span class="text-primary">
-              <%= creator %>
+              <%=foundGame.creator %>
             </span> </h3>
         </div>
       </div>
@@ -29,5 +29,5 @@
 
     <script type="text/javascript" src="/swf/swfobject.js"></script>
     <script type="text/javascript">
-      swfobject.embedSWF("/games/<%= fileName %>", "game", "<%= width %>", "<%= height %>", "9.0.0", "/swf/expressInstall.swf");
+      swfobject.embedSWF("/games/<%= foundGame.fileName %>", "game", "<%= foundGame.width %>", "<%= foundGame.height %>", "9.0.0", "/swf/expressInstall.swf");
     </script>

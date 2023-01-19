@@ -1,18 +1,18 @@
 <% layout ('layouts/boilerplate')%>
 <h1>Edit this Game:</h1>
-<form action="/game/<%=id%>/update " method="POST" class="mb-3" enctype="multipart/form-data">
+<form action="/game/<%=foundGame.id%>/update " method="POST" class="mb-3" enctype="multipart/form-data">
     <div class="mb-3">
       <label for="gameName" class="form-label">Name</label>
-      <input type="text" class="form-control" id="gameName" name="title" value="<%= title %>">
+      <input type="text" class="form-control" id="gameName" name="title" value="<%= foundGame.title %>">
     </div>
     <div class="mb-3">
       <label for="creator" class="form-label">Creator</label>
-      <input type="text" class="form-control" id="creator" name="creator" value="<%= creator %>">
+      <input type="text" class="form-control" id="creator" name="creator" value="<%= foundGame.creator %>">
     </div>
     <div class="mb-3">
       <label class="form-label">Size</label>
-      <input type="text" class="form-control" id="width" name="width" value="<%= width %>">
-      <input type="text" class="form-control" id="height" name="height" value="<%= height %>">
+      <input type="text" class="form-control" id="width" name="width" value="<%= foundGame.width %>">
+      <input type="text" class="form-control" id="height" name="height" value="<%= foundGame.height %>">
     </div>
     <!-- <h3>Upload your files</h3>
     <div class="input-group mb-3">

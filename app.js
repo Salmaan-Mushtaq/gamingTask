@@ -64,6 +64,7 @@ app.get('/addgame', (req, res) => {
 
 /* --Adding New Game Code Start-- */
 app.post('/addgame', (req, res) => {
+
     const data = req.body;
 
     //variable for representation of files
@@ -89,12 +90,13 @@ app.post('/addgame', (req, res) => {
     });
     //creatiing the game
     Game.create({
-        title: data.title,
-        creator: data.creator,
-        width: data.width,
-        height: data.height,
-        fileName: gameFile.name,
-        thumbnailFile: imageFile.name
+        // title: data.title,
+        // creator: data.creator,
+        // width: data.width,
+        // height: data.height,
+        // fileName: gameFile.name,
+        // thumbnailFile: imageFile.name
+        ...data, fileName: gameFile.name, thumbnailFile: imageFile.name
     }, (error, data) => {
         if (error) {
             console.log("Data cannot be added in the database");
@@ -115,12 +117,13 @@ app.get('/game/:id', (req, res) => {
             res.send("Error!! Id not found in the database");
         } else {
             res.render('components/game', {
-                title: foundGame.title,
-                creator: foundGame.creator,
-                width: foundGame.width,
-                height: foundGame.height,
-                fileName: foundGame.fileName,
-                thumbnailFile: foundGame.thumbnailFile
+                // title: foundGame.title,
+                // creator: foundGame.creator,
+                // width: foundGame.width,
+                // height: foundGame.height,
+                // fileName: foundGame.fileName,
+                // thumbnailFile: foundGame.thumbnailFile
+                foundGame: foundGame
             })
         }
     })
@@ -135,11 +138,12 @@ app.get('/game/:id/edit', (req, res) => {
             res.send("Error!! Id not found in the database");
         } else {
             res.render('components/editgame', {
-                title: foundGame.title,
-                creator: foundGame.creator,
-                width: foundGame.width,
-                height: foundGame.height,
-                id: id
+                // title: foundGame.title,
+                // creator: foundGame.creator,
+                // width: foundGame.width,
+                // height: foundGame.height,
+                // id: id
+                foundGame: foundGame
             });
         }
     });
@@ -149,11 +153,13 @@ app.get('/game/:id/edit', (req, res) => {
 /* --Update the selected Game Code Start-- */
 app.post('/game/:id/update', (req, res) => {
     const id = req.params.id;
+    const body = req.body;
     Game.findByIdAndUpdate(id, {
-        title: req.body.title,
-        creator: req.body.creator,
-        width: req.body.width,
-        height: req.body.height
+        // title: req.body.title,
+        // creator: req.body.creator,
+        // width: req.body.width,
+        // height: req.body.height
+        ...body
     }, (error, updateGame) => {
         if (error) {
             console.log("Game not updated")
