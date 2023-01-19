@@ -5,9 +5,9 @@ const ejsMate = require('ejs-mate');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const fileUpload = require('express-fileupload')
+const Game = require('./models/game');
 
-mongoose.set('strictQuery', true)
-
+mongoose.set('strictQuery', true);
 mongoose.connect("mongodb+srv://khanSalmaan:Salmaan786@newcluster.fzkg6ri.mongodb.net/test")
     .then(() => {
         console.log("Data Base Connected");
@@ -17,16 +17,16 @@ mongoose.connect("mongodb+srv://khanSalmaan:Salmaan786@newcluster.fzkg6ri.mongod
         console.log(err);
     })
 
-const gameSchema = new mongoose.Schema({
-    title: String,
-    creator: String,
-    width: Number,
-    height: Number,
-    fileName: String,
-    thumbnailFile: String
-});
+// const gameSchema = new mongoose.Schema({
+//     title: String,
+//     creator: String,
+//     width: Number,
+//     height: Number,
+//     fileName: String,
+//     thumbnailFile: String
+// });
 
-const Game = mongoose.model("Game", gameSchema);
+// const Game = mongoose.model("Game", gameSchema);
 
 app.engine('ejs', ejsMate);
 app.set('views', path.join(__dirname, 'views'));
@@ -34,11 +34,15 @@ app.set('view engine', 'ejs');
 app.use(express.static('public'));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(fileUpload());
+
+/* ---Code for home Start--- */
 app.get('/', (req, res) => {
     res.render('components/home');
 });
+/* ---Code for home End--- */
 
 //Route to see all the gamesList
+/* --List Games Code Start-- */
 app.get('/list', (req, res) => {
     //game list
     Game.find({}, (error, games) => {
@@ -49,21 +53,25 @@ app.get('/list', (req, res) => {
         }
     });
 })
+/* --List Games Code End-- */
 
+/* ---Addgame render Code Start--- */
 app.get('/addgame', (req, res) => {
     res.render('components/addgame');
 });
+/* ---Addgame render Code End--- */
 
-//route to add a new game 
+
+/* --Adding New Game Code Start-- */
 app.post('/addgame', (req, res) => {
-
     const data = req.body;
+
     //variable for representation of files
     const gameFile = req.files.gameFile;
     const imageFile = req.files.imageFile;
 
     //calling the methods to save the files in the respected folder
-    gameFile.mv('public/games/' + gameFile.name, function (error) {
+    gameFile.mv('public/games/' + gameFile.name, (error) => {
         if (error) {
             console.log("Couldn't upload the game file");
             console.log(error);
@@ -71,7 +79,7 @@ app.post('/addgame', (req, res) => {
             console.log("Game file succesfully uploaded");
         }
     });
-    imageFile.mv('public/games/thumbnails/' + imageFile.name, function (error) {
+    imageFile.mv('public/games/thumbnails/' + imageFile.name, (error) => {
         if (error) {
             console.log("Couldn't upload the image file");
             console.log(error);
@@ -79,7 +87,7 @@ app.post('/addgame', (req, res) => {
             console.log("Image file succesfully uploaded");
         }
     });
-
+    //creatiing the game
     Game.create({
         title: data.title,
         creator: data.creator,
@@ -97,9 +105,9 @@ app.post('/addgame', (req, res) => {
     });
     res.redirect('/list');
 })
+/* --Adding New Game Code End-- */
 
-
-
+/* --Details of game Code Start-- */
 app.get('/game/:id', (req, res) => {
     const id = req.params.id;
     Game.findById(id, (error, foundGame) => {
@@ -117,7 +125,9 @@ app.get('/game/:id', (req, res) => {
         }
     })
 });
+/* --Details of Game Code End-- */
 
+/* --Edit the selected Game Code Start-- */
 app.get('/game/:id/edit', (req, res) => {
     const id = req.params.id;
     Game.findById(id, (error, foundGame) => {
@@ -134,7 +144,9 @@ app.get('/game/:id/edit', (req, res) => {
         }
     });
 });
+/* --Edit the selected Game Code End-- */
 
+/* --Update the selected Game Code Start-- */
 app.post('/game/:id/update', (req, res) => {
     const id = req.params.id;
     Game.findByIdAndUpdate(id, {
@@ -152,7 +164,9 @@ app.post('/game/:id/update', (req, res) => {
         }
     });
 });
+/* --Update the selected Game Code End-- */
 
+/* --Delete the selected Game Code Start-- */
 app.get('/game/:id/delete', (req, res) => {
     const id = req.params.id;
     Game.findByIdAndDelete(id, (err) => {
@@ -164,6 +178,8 @@ app.get('/game/:id/delete', (req, res) => {
         }
     });
 })
+/* --Delete the selected Game Code End-- */
+
 app.listen(3000, () => {
     console.log('Gamming website is listening on port 3000')
 });
