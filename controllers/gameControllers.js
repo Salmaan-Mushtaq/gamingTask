@@ -1,21 +1,24 @@
 const Game = require('../models/game');
+
 const game_index = (req, res) => {
     res.render('components/home');
-}
+};
 
 const game_list = (req,res)=>{
        //game list
        Game.find({}, (error, games) => {
         if (error) {
-            console.log("Problem in retreiving the data from the database")
+            console.log("Problem in retreiving the data from the database");
         } else {
             res.render('components/list', { gamesData: games });
         }
     });
-}
+};
+
 const game_addgame = (req,res)=>{
     res.render('components/addgame');
-}
+};
+
 const game_addgame_post = (req,res)=>{
     const data = req.body;
 
@@ -52,17 +55,18 @@ const game_addgame_post = (req,res)=>{
         }
     });
     res.redirect('/game');
-}
+};
+
 const game_id = (req,res)=>{
     const id = req.params.id;
     Game.findById(id, (error, foundGame) => {
         if (error) {
             res.send("Error!! Id not found in the database");
         } else {
-            res.render('components/game', { foundGame: foundGame })
+            res.render('components/game', { foundGame: foundGame });
         }
     })
-}
+};
 const game_id_edit = (req,res)=>{
     const id = req.params.id;
     Game.findById(id, (error, foundGame) => {
@@ -72,21 +76,21 @@ const game_id_edit = (req,res)=>{
             res.render('components/editgame', { foundGame: foundGame });
         }
     });
-}
+};
 
 const game_id_update = (req, res) => {
     const id = req.params.id;
     const body = req.body;
     Game.findByIdAndUpdate(id, { ...body }, (error, updateGame) => {
         if (error) {
-            console.log("Game not updated")
+            console.log("Game not updated");
             console.log(error)
         } else {
             res.redirect('/game');
             console.log(updateGame);
         }
     });
-}
+};
 const game_id_delete = (req, res) => {
     const id = req.params.id;
     Game.findByIdAndDelete(id, (err) => {
@@ -97,7 +101,8 @@ const game_id_delete = (req, res) => {
             res.redirect('/game')
         }
     });
-}
+};
+
 module.exports ={
     game_index,
     game_list,
@@ -107,4 +112,4 @@ module.exports ={
     game_id_edit,
     game_id_update,
     game_id_delete
-}
+};
